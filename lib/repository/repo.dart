@@ -35,11 +35,11 @@ class Repo {
         .collection('waiters')
         .get();
 
-    waitersList.docs.forEach((document) {
-      final data = document.data();
-      waitersData.add(data);
-    });
-  }
+        waitersList.docs.forEach((document) {
+          final data = document.data();
+          waitersData.add(data);
+        });
+  } 
 
   Stream<QuerySnapshot<Object>> restroList(String? restroId) {
     return firestore.collection('restaurants').snapshots();
@@ -128,7 +128,7 @@ class Repo {
         .set(tableOrders);
   }
 
-  Future<void> showOrder(
+  Future<void> makeOrder(
       {required BuildContext context,
       required String tableId,
       required String waiterId,
@@ -177,7 +177,7 @@ class Repo {
         .collection('restaurants')
         .doc('r47DlfmwH3R5Sc8HZT9BZnlau4y2')
         .collection('orders')
-        .doc(uid)
+        .doc(tableId)
         .set(orders);
 
     List<Map<String, dynamic>> orderList = [

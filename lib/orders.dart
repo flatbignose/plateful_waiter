@@ -143,7 +143,7 @@ class OrderListState extends ConsumerState<OrderList> {
                     ),
                     IconButton(
                         onPressed: () {
-                          ref.watch(repoProvider).showOrder(
+                          ref.watch(repoProvider).makeOrder(
                               context: context,
                               restroId: widget.restroId,
                               tableId: widget.tableId,
