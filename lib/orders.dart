@@ -70,11 +70,13 @@ class OrderListState extends ConsumerState<OrderList> {
                       final document = snap.data() as Map<String, dynamic>;
                       final listOrders = document['orderList'];
                       listOrders.removeAt(0);
-
+                      ref.read(repoProvider).grandtotalChnage();
                       return Expanded(
                         child: ListView.builder(
                           itemBuilder: (context, index) {
                             final data = listOrders[index];
+                            double total = data['total'];
+                            ref.read(repoProvider).increasegrand(total);
                             return Container(
                                 width: size.width * 0.95,
                                 height: size.height * 0.07,
@@ -106,56 +108,57 @@ class OrderListState extends ConsumerState<OrderList> {
               // )
             ],
           ),
-        Positioned(
-              left: 15,
-              right: 15,
-              bottom: 20,
-              child: Container(
-                width: size.width,
-                height: size.height * 0.07,
-                decoration: BoxDecoration(
-                    color: backgroundColor, borderRadius: radius20),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      const Text(
-                        'Grand Total',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: textColor),
-                      ),
-                      const Text(
-                        ':',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: textColor),
-                      ),
-                      Text(
-                        ('₹$grandTotal').toString(),
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: textColor),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            ref.watch(repoProvider).showOrder(
-                                context: context,
-                                restroId: widget.restroId,
-                                tableId: widget.tableId,
-                                waiterId: widget.waiterId,
-                                waiterName: widget.waiterName);
-                            setState(() {});
-                          },
-                          icon: Icon(
-                            Icons.done_all,
-                            color: Colors.red,
-                          ))
-                    ]),
-              ),
+          Positioned(
+            left: 15,
+            right: 15,
+            bottom: 20,
+            child: Container(
+              width: size.width,
+              height: size.height * 0.07,
+              decoration:
+                  BoxDecoration(color: backgroundColor, borderRadius: radius20),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    const Text(
+                      'Grand Total',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: textColor),
+                    ),
+                    const Text(
+                      ':',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: textColor),
+                    ),
+                    Text(
+                      grandTotal,
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: textColor),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          ref.watch(repoProvider).showOrder(
+                              context: context,
+                              restroId: widget.restroId,
+                              tableId: widget.tableId,
+                              waiterId: widget.waiterId,
+                              waiterName: widget.waiterName);
+                          Navigator.pop(context);
+                          setState(() {});
+                        },
+                        icon: Icon(
+                          Icons.done_all,
+                          color: Colors.red,
+                        ))
+                  ]),
             ),
+          ),
         ],
       ),
     );

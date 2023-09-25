@@ -60,6 +60,14 @@ class Repo {
 
   final List<Map<String, dynamic>> orderList = [];
   double grandTotal = 0;
+  grandtotalChnage() {
+    grandTotal = 0;
+  }
+
+  increasegrand(double value) {
+    grandTotal = grandTotal + value;
+  }
+
   Set<dynamic> setFood = {};
   // final int index;
   Future<void> orderTaking({
@@ -126,10 +134,24 @@ class Repo {
       required String waiterId,
       required String waiterName,
       required String restroId}) async {
+    final doc = await firestore
+        .collection('restaurants')
+        .doc(restroId)
+        .collection('tables')
+        .doc(tableId)
+        .collection('orders')
+        .get();
+
+    final document = doc.docs[0];
+    final data = document.data();
+    final List foodList = data['orderList'];
+    foodList.removeAt(0);
+
     DateTime time = DateTime.now();
+
     final uid = const Uuid().v1();
     Map<String, dynamic> orders = {
-      'order': orderList,
+      'order': foodList,
       'orderTime': time,
       'orderId': uid,
       'orderTotal': grandTotal,
@@ -157,14 +179,26 @@ class Repo {
         .collection('orders')
         .doc(uid)
         .set(orders);
-    orderList.clear();
+
+    List<Map<String, dynamic>> orderList = [
+      {'foodSet': 'check'}
+    ];
+    Map<String, dynamic> foodsList = {'orderList': orderList};
+    await firestore
+        .collection('restaurants')
+        .doc(restroId)
+        .collection('tables')
+        .doc(tableId)
+        .collection('orders')
+        .doc('orderlist')
+        .set(foodsList);
     grandTotal = 0;
     Navigator.pop(context);
   }
 
   deletesingleItem(int index) async {
     final data = orderList[index];
-    final double total = data['total'];
+    final int total = data['total'];
     grandTotal = grandTotal - total;
     // print(grandTotal);
     orderList.removeAt(index);

@@ -63,10 +63,6 @@ class TableMenuState extends ConsumerState<TableMenu> {
                   .collection('menuCategory')
                   .snapshots(),
               builder: (context, snapshot) {
-                var categoryItems = snapshot.data!.docs;
-                categoryItems.sort(
-                  (a, b) => a['categoryName'].compareTo(b['categoryName']),
-                );
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
@@ -80,9 +76,9 @@ class TableMenuState extends ConsumerState<TableMenu> {
                 return Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: ListView.builder(
-                      itemCount: categoryItems.length,
+                      itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
-                        final document = categoryItems[index];
+                        final document = snapshot.data!.docs[index];
                         final data = document.data() as Map<String, dynamic>;
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
