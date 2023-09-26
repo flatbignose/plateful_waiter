@@ -58,6 +58,7 @@ class OrderListState extends ConsumerState<OrderList> {
                         .doc(widget.tableId)
                         .collection('orders')
                         .snapshots(),
+                        
                     builder: (context, snapshots) {
                       if (snapshots.connectionState ==
                           ConnectionState.waiting) {
